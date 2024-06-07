@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Superfan</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md bg-body">
+        <div class="container-fluid"><a class="navbar-brand" href="#"><h4>Superfan</h4></a>
+        </div>
+    </nav>
+    <div class="p-5">
+        <div>
+            <h5>Machine 1</h5>
+        </div>
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <p class="text-primary m-0 fw-bold">Count</p>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3"></div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="city"><strong>Count&nbsp;</strong></label><input id="iot-count" class="form-control" type="number"></div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3"><label class="form-label" for="country"><strong>Target</strong></label><input id="iot-target" class="form-control" type="number"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        const iotCount = document.getElementById('iot-count');
+        const iotTarget = document.getElementById('iot-target');
+        
+        const ws = new WebSocket('ws://localhost:8080');
+        ws.onopen = () => {
+            console.log('Connected to the WS Server');
+        };
+        ws.onmessage = (message) => {
+            console.log('Message from the server:', message.data);
+            iotCount.value = message.data;
+        };
+        ws.onclose = () => {
+            console.log('Disconnected from the WS Server');
+        };
+
+        iotTarget.addEventListener('change', () => {
+            localStorage.setItem('target', iotTarget.value);
+        });
+
+        window.addEventListener('load', () => {
+            iotTarget.value = localStorage.getItem('target') || 0;
+        });
+
+    </script>
+</body>
+
+</html>
